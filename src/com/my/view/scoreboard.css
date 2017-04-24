@@ -1,0 +1,50 @@
+/*
+ * Empty Stylesheet file.
+ */
+@font-face {
+    font-family: 'Fredericka the Great', cursive;
+    src: url("../fonts/FrederickatheGreat-Regular.ttf");
+}
+
+.mainFxmlClass {
+    -fx-font-family: 'Fredericka the Great', cursive;
+}
+
+.label{
+    -fx-font-size: 60px;
+}
+
+.scoreLabel {
+    -fx-font-size: 270px;
+    -fx-text-fill: #fff714;
+    -fx-opacity: 1;
+    -fx-background-color: blue;
+}
+
+.gameScorelabel {
+    -fx-font-size: 80px;
+    -fx-text-fill: #00ff2f;
+}
+
+.playerName{
+    -fx-font-size: 60px;
+    -fx-text-fill:#fff714;
+}
+
+.serviceFlagActive{
+    -fx-background-color: red;
+}
+
+.serviceFlagInactive{
+    -fx-background-color: grey;
+}
+
+.split-pane {
+   -fx-border-color: transparent;
+   -fx-background-color: grey;
+   -fx-background-insets: 0;
+}
+
+.split-pane-divider {
+   -fx-background-color: transparent;
+}
