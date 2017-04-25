@@ -5,8 +5,6 @@ package com.my.app;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-import com.my.server.TTSBThreadService;
 import java.io.IOException;
 import java.net.ServerSocket;
 import javafx.application.Application;
@@ -20,6 +18,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -44,27 +43,20 @@ public class TTSBoard extends Application {
         };
 
         scene.addEventHandler(KeyEvent.KEY_RELEASED, eventHandler);
-        stage.show(); 
-       }
+        stage.show();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent we) {
+                System.exit(0);
+            }
+        });
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
-    }
-
-    private void initServer(){
-        try (ServerSocket serverSocket = new ServerSocket(9888)) {
-
-            //serverSocket.setSoTimeout(10 * 1000);
-            //while (true) {
-                new TTSBThreadService(serverSocket.accept()).start();
-            //}
-
-        } catch (IOException e) {
-            System.out.println("Could not listen on port 9889: " + e.getMessage());
-            System.exit(-1);
-        }
     }
 }

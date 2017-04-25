@@ -6,13 +6,10 @@ package com.my.app;
  * and open the template in the editor.
  */
 
-import com.my.server.NetworkConnection;
-import com.my.server.Server;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,13 +23,17 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import socketfx.Constants;
+import socketfx.FxSocketServer;
+import socketfx.SocketListener;
 
 /**
  *
  * @author Alex
  */
 public class ttsbController implements Initializable {
-
+    private final static Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+    
     final String GAME_11 = "11";
     final String GAME_21 = "21";
     final String ACTIVE_SERVICE = "serviceFlagActive";
@@ -81,19 +82,26 @@ public class ttsbController implements Initializable {
 
     EventHandler<KeyEvent> eventHandler;
     
-    private NetworkConnection connection = createServer();
+    private boolean isConnected;
 
+    public enum ConnectionDisplayState {
+        DISCONNECTED, WAITING, CONNECTED, AUTOCONNECTED, AUTOWAITING
+    }
+    
+    public enum Cmd {
+        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21
+    }
+
+    private FxSocketServer socket;
+
+    private void connect() {
+        socket = new FxSocketServer(new FxSocketListener(), 55555, Constants.instance().DEBUG_NONE);
+        socket.connect();
+    }
+    
     @FXML
     private void handleButtonAction(ActionEvent event) {
 
-    }
-
-    private Server createServer() {
-        return new Server(55555, data -> {
-            Platform.runLater(() -> {
-                System.out.println(data.toString());
-            });
-        });
     }
     
     @Override
@@ -104,14 +112,42 @@ public class ttsbController implements Initializable {
         SetAppKeyHandler();
 
         mainContainer.addEventHandler(KeyEvent.KEY_RELEASED, eventHandler);
-        try {
-            connection.startConnection();
-            
-        } catch (Exception ex) {
-            Logger.getLogger(ttsbController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        Runtime.getRuntime().addShutdownHook(new ShutDownThread());
+        
+        connect();
     }
 
+    class ShutDownThread extends Thread {
+        @Override
+        public void run() {
+            if (socket != null) {
+                if (socket.debugFlagIsSet(Constants.instance().DEBUG_STATUS)) {
+                    LOGGER.info("ShutdownHook: Shutting down Server Socket");    
+                }
+                socket.shutdown();
+            }
+        }
+    }
+    
+    class FxSocketListener implements SocketListener {
+        @Override
+        public void onMessage(String line) {
+            if (line != null && !line.equals("")) {
+                LOGGER.info(line);
+                ProcessRemoteCmd(line.trim());
+            }
+        }
+
+        @Override
+        public void onClosedStatus(boolean isClosed) {
+            if (isClosed) {
+                isConnected = false;
+                connect();
+            } 
+        }
+    }
+    
     protected void SetZeroScore() {
         ResetBoard(true);
     }
@@ -230,7 +266,7 @@ public class ttsbController implements Initializable {
         playerNameRight.setText(oldSideLeft);
 
         oldSideLeft = gameCounterLeft.getText();
-        gameCounterLeft.setText(gameCounterLeft.getText());
+        gameCounterLeft.setText(gameCounterRight.getText());
         gameCounterRight.setText(oldSideLeft);
 
         oldSideLeft = counterLeft.getText();
@@ -238,11 +274,67 @@ public class ttsbController implements Initializable {
         counterRight.setText(oldSideLeft);
     }
 
-    private void SetAppKeyHandler() {
-        eventHandler = (KeyEvent event) -> {
-            //System.out.println(event.getCode());
-            if (keycombIncreaseLeft.match(event)) {
-                //System.out.println(event.getText());
+    private void ProcessRemoteCmd(String data){
+        if (data != null && data.equalsIgnoreCase(Cmd.LUP.name())) {
+                //System.out.println(event.getText());               
+                if (!gameCompleted) {
+                    IncreaseCounter(true);
+                    CheckServiceOrder(gameServiceNumber);
+                }
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.LDOWN.name())) {
+                if (!gameCompleted) {
+                    //System.out.println(event.getText());
+                    DecriseCounter(true);
+                    CheckServiceOrder(gameServiceNumber);
+                }
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.RUP.name())) {
+                if (!gameCompleted) {
+                    //System.out.println(event.getText());
+                    IncreaseCounter(false);
+                    CheckServiceOrder(gameServiceNumber);
+                }
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.RDOWN.name())) {
+                if (!gameCompleted) {
+                    //System.out.println(event.getText());
+                    DecriseCounter(false);
+                    CheckServiceOrder(gameServiceNumber);
+                }
+            }
+            
+            if (data != null && data.equalsIgnoreCase(Cmd.RESET.name())) {
+                ResetBoard(false);
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.SWITCH.name())) {
+                SwitchSides();
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.GAME11.name())) {
+                SetGameScore(2, 11);
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.GAME21.name())) {
+                SetGameScore(5, 21);
+            }
+
+            if (data != null && data.equalsIgnoreCase(Cmd.NEXT.name())) {
+                SetZeroScore();
+            }
+            
+            if(data != null && data.equalsIgnoreCase(Cmd.SCHANGE.name())){
+                ChangeService();
+            }
+    }
+    
+    private void ProcessEvents(KeyEvent event){
+        if (keycombIncreaseLeft.match(event)) {
+                //System.out.println(event.getText());               
                 if (!gameCompleted) {
                     IncreaseCounter(true);
                     CheckServiceOrder(gameServiceNumber);
@@ -272,7 +364,7 @@ public class ttsbController implements Initializable {
                     CheckServiceOrder(gameServiceNumber);
                 }
             }
-
+            
             if (keycombReset.match(event)) {
                 ResetBoard(false);
             }
@@ -296,6 +388,12 @@ public class ttsbController implements Initializable {
             if(keycombServiceChange.match(event)){
                 ChangeService();
             }
+    }
+    
+    private void SetAppKeyHandler() {
+        eventHandler = (KeyEvent event) -> {
+            //System.out.println(event.getCode());
+            ProcessEvents(event);
         };
     }
 
