@@ -2,41 +2,58 @@
  * Empty Stylesheet file.
  */
 @font-face {
-    font-family: 'Fredericka the Great', cursive;
-    src: url("../fonts/FrederickatheGreat-Regular.ttf");
+    
+    font-family: 'Black Ops One', cursive;
+    src: url("../fonts/BlackOpsOne-Regular.ttf");
 }
 
 .mainFxmlClass {
-    -fx-font-family: 'Fredericka the Great', cursive;
+    -fx-font-family: 'Black Ops One', cursive;
 }
 
 .label{
-    -fx-font-size: 60px;
+    -fx-font-size: 50px;
 }
 
 .scoreLabel {
-    -fx-font-size: 270px;
-    -fx-text-fill: #fff714;
+    -fx-font-size: 300px;
+    -fx-text-fill: white;
     -fx-opacity: 1;
-    -fx-background-color: blue;
+    -fx-stroke-width: 4px;
+    /*-fx-background-color: blue;*/
+}
+
+#sLabelLeft{
+    -fx-background-image:url("leather-texture-red.jpg");
+    -fx-background-position: top left;
+    -fx-background-repeat: repeat;
+    
+    -fx-background-size: 250 270; 
+}
+
+#sLabelRight{
+    -fx-background-image:url("leather-texture-red.jpg");
+    -fx-background-position: top left;
+    -fx-background-repeat: repeat; 
+    -fx-background-size: 250 270;
 }
 
 .gameScorelabel {
-    -fx-font-size: 80px;
-    -fx-text-fill: #00ff2f;
+    -fx-font-size: 50px;
+    -fx-text-fill: #fff714;
 }
 
 .playerName{
-    -fx-font-size: 60px;
+    -fx-font-size: 50px;
     -fx-text-fill:#fff714;
 }
 
 .serviceFlagActive{
-    -fx-background-color: red;
+    -fx-background-color: #ea0833;
 }
 
 .serviceFlagInactive{
-    -fx-background-color: grey;
+    -fx-background-color: #3048a2;
 }
 
 .split-pane {
@@ -46,5 +63,21 @@
 }
 
 .split-pane-divider {
-   -fx-background-color: transparent;
+   -fx-background-color: #3048a2;
+}
+
+.serverStatusOff {
+    -fx-fill: #ea0833;
+    -fx-stroke-width: 4px;
+}
+
+.serverStatusOn {
+    -fx-fill: green;
+    -fx-stroke-width: 4px;
+}
+
+.sbGameLabel{
+    -fx-text-fill: white;
+    -fx-font-size: 70px;
+    
 }

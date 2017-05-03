@@ -5,8 +5,7 @@ package com.my.app;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import java.io.IOException;
-import java.net.ServerSocket;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;

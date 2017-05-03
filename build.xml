@@ -7,7 +7,7 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="TTSB" default="default" basedir=".">
+<project name="TTSB" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
     <description>Builds, tests, and runs the project TTSB.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
@@ -70,4 +70,13 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-jfx-deploy">
+        <fx:deploy width="${javafx.run.width}" height="${javafx.run.height}" nativeBundles="all" outdir="${basedir}/${dist.dir}" outfile="${application.title}">
+            <fx:application name="${application.title}" mainClass="${javafx.main.class}"/>
+            <fx:resources>
+                <fx:fileset dir="${basedir}/${dist.dir}" includes="*.jar"/>
+            </fx:resources>
+            <fx:info title="${application.title}" vendor="${application.vendor}"/>
+        </fx:deploy>          
+    </target>
 </project>

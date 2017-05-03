@@ -23,6 +23,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import socketfx.Constants;
 import socketfx.FxSocketServer;
 import socketfx.SocketListener;
@@ -72,6 +73,10 @@ public class ttsbController implements Initializable {
     private RadioButton on_offSwitch;
     @FXML
     private Button exitScoreBoard;
+    @FXML
+    private Circle serverStatus;
+    @FXML
+    private Label gameTypeLabel;
 
     private int gameServiceNumber = 2;
     private int gameTo = 11;
@@ -84,12 +89,17 @@ public class ttsbController implements Initializable {
     
     private boolean isConnected;
 
+    private void UpdateName(String name, boolean isForLeftPlayer) {
+        Label lbl = isForLeftPlayer ? playerNameLeft: playerNameRight;
+        lbl.setText( name);
+    }
+
     public enum ConnectionDisplayState {
         DISCONNECTED, WAITING, CONNECTED, AUTOCONNECTED, AUTOWAITING
     }
     
     public enum Cmd {
-        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21
+        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21, PLLEFT, PLRIGHT
     }
 
     private FxSocketServer socket;
@@ -142,9 +152,27 @@ public class ttsbController implements Initializable {
         @Override
         public void onClosedStatus(boolean isClosed) {
             if (isClosed) {
-                isConnected = false;
+                isConnected = true;
                 connect();
-            } 
+                displayState(ConnectionDisplayState.CONNECTED);
+            } else {
+            
+            }
+        }
+    }
+    
+    private void displayState(ConnectionDisplayState state) {
+        switch (state) {
+            case DISCONNECTED:
+                serverStatus.getStyleClass().remove(0);
+                serverStatus.getStyleClass().add("serverStatusOff");
+                break;
+            case CONNECTED:
+                serverStatus.getStyleClass().remove(0);
+                serverStatus.getStyleClass().add("serverStatusOn");
+                break;
+            case AUTOCONNECTED:
+                break;
         }
     }
     
@@ -155,6 +183,7 @@ public class ttsbController implements Initializable {
     protected void SetGameScore(int i, int gt) {
         gameServiceNumber = i;
         gameTo = gt;
+        gameTypeLabel.setText(String.valueOf(gt));
     }
 
     protected void CheckServiceOrder(int gameService) {
@@ -329,6 +358,18 @@ public class ttsbController implements Initializable {
             
             if(data != null && data.equalsIgnoreCase(Cmd.SCHANGE.name())){
                 ChangeService();
+            }
+            
+            if(data != null && data.startsWith(Cmd.PLLEFT.name())){
+                String[] nameArr = data.split(":");
+                String name = nameArr[1];
+                UpdateName(name, true);
+            }
+            
+            if(data != null && data.startsWith(Cmd.PLRIGHT.name())){
+                String[] nameArr = data.split(":");
+                String name = nameArr[1];
+                UpdateName(name, false);
             }
     }
     
