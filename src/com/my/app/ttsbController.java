@@ -5,10 +5,14 @@ package com.my.app;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.lang.invoke.MethodHandles;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -77,6 +81,8 @@ public class ttsbController implements Initializable {
     private Circle serverStatus;
     @FXML
     private Label gameTypeLabel;
+    @FXML
+    private Label ipAddrLabel;
 
     private int gameServiceNumber = 2;
     private int gameTo = 11;
@@ -91,7 +97,7 @@ public class ttsbController implements Initializable {
 
     private void UpdateName(String name, boolean isForLeftPlayer) {
         Label lbl = isForLeftPlayer ? playerNameLeft: playerNameRight;
-        lbl.setText( name);
+        lbl.setText( name.toUpperCase());
     }
 
     public enum ConnectionDisplayState {
@@ -109,6 +115,28 @@ public class ttsbController implements Initializable {
         socket.connect();
     }
     
+    private void getIPAddersses() throws SocketException{
+        Enumeration e = NetworkInterface.getNetworkInterfaces();
+        String ipaddr = "";
+        
+        while(e.hasMoreElements())
+        {
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+            Enumeration ee = n.getInetAddresses();
+            
+            while (ee.hasMoreElements()){
+                InetAddress i = (InetAddress) ee.nextElement();
+                
+                if(!i.isLoopbackAddress() && !i.isAnyLocalAddress() && i.getHostAddress().contains(".")){
+                    System.out.println(i.getHostAddress());
+                    ipaddr += i.getHostAddress() + "\n";
+                }
+            }
+        }
+        
+        ipAddrLabel.setText(ipaddr);
+    }
+    
     @FXML
     private void handleButtonAction(ActionEvent event) {
 
@@ -120,12 +148,18 @@ public class ttsbController implements Initializable {
         ResetBoard(false);
         System.out.println("Add key listener...");
         SetAppKeyHandler();
-
+        
         mainContainer.addEventHandler(KeyEvent.KEY_RELEASED, eventHandler);
         
         Runtime.getRuntime().addShutdownHook(new ShutDownThread());
         
         connect();
+        
+        try {
+            getIPAddersses();
+        } catch (SocketException ex) {
+            Logger.getLogger(ttsbController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     class ShutDownThread extends Thread {
@@ -202,7 +236,7 @@ public class ttsbController implements Initializable {
             }
         }
     }
-
+    
     private void ChangeServiceColor(String s1, String s2) {
         serviceFlagRight.getStyleClass().remove(0);
         serviceFlagLeft.getStyleClass().remove(0);
@@ -212,6 +246,7 @@ public class ttsbController implements Initializable {
 
     private void SetGameCounter(Label gameCounter) {
         int counter = Integer.parseInt(gameCounter.getText()) + 1;
+        
         gameCounter.setText(String.valueOf(counter));
     }
 
@@ -363,12 +398,14 @@ public class ttsbController implements Initializable {
             if(data != null && data.startsWith(Cmd.PLLEFT.name())){
                 String[] nameArr = data.split(":");
                 String name = nameArr[1];
+                
                 UpdateName(name, true);
             }
             
             if(data != null && data.startsWith(Cmd.PLRIGHT.name())){
                 String[] nameArr = data.split(":");
                 String name = nameArr[1];
+                
                 UpdateName(name, false);
             }
     }
