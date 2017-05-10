@@ -6,6 +6,9 @@ package com.my.app;
  * and open the template in the editor.
  */
 
+import java.lang.invoke.MethodHandles;
+import java.util.Map;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -24,15 +27,29 @@ import javafx.stage.WindowEvent;
  * @author Alex
  */
 public class TTSBoard extends Application {
-
+    private final static Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+    
     final KeyCombination keycombExit = new KeyCodeCombination(KeyCode.X, KeyCodeCombination.CONTROL_DOWN);
     EventHandler<KeyEvent> eventHandler;
 
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("scoreboard.fxml"));
-
-        Scene scene = new Scene(root);
+        
+        Scene scene = null;
+        
+        if(!getParameters().getNamed().isEmpty()){
+            System.out.println("Params: " + getParameters().getNamed());
+            Map<String, String> res = getParameters().getNamed();
+            String[] resolution = res.get("res").split("x");
+            double w = Double.parseDouble(resolution[0]);
+            double h = Double.parseDouble(resolution[1]);
+            
+            scene = new Scene(root, w, h);
+        }else{
+            scene = new Scene(root);
+        }
+        
         stage.setScene(scene);
 
         eventHandler = (KeyEvent event) -> {

@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainContainer" prefHeight="1050.0" prefWidth="1680.0" styleClass="mainFxmlClass" stylesheets="@../view/scoreboard.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.my.app.ttsbController">
+<BorderPane fx:id="mainContainer" prefHeight="1080.0" prefWidth="1650.0" styleClass="mainFxmlClass" stylesheets="@../view/scoreboard.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.my.app.ttsbControllerModule">
    <top>
       <SplitPane dividerPositions="0.5" focusTraversable="false" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #3048a2;" BorderPane.alignment="CENTER">
         <items>
@@ -34,10 +34,10 @@
                         <Font name="Cambria Math" size="56.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="25.0" right="15.0" />
+                        <Insets left="10.0" right="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="gameCounterLeft" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="5.0" lineSpacing="5.0" prefHeight="65.0" prefWidth="55.0" styleClass="gameScorelabel" text="0" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+                  <Label fx:id="gameCounterLeft" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="5.0" lineSpacing="5.0" prefHeight="65.0" prefWidth="70.0" styleClass="gameScorelabel" text="0" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
                      <HBox.margin>
                         <Insets right="75.0" />
                      </HBox.margin>
@@ -49,7 +49,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #3048a2;">
                <children>
-                  <Label fx:id="gameCounterRight" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="5.0" lineSpacing="5.0" prefHeight="65.0" prefWidth="55.0" styleClass="gameScorelabel" text="0" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+                  <Label fx:id="gameCounterRight" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="5.0" lineSpacing="5.0" prefHeight="65.0" prefWidth="70.0" styleClass="gameScorelabel" text="0" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="75.0" />
                      </HBox.margin></Label>
@@ -58,7 +58,7 @@
                         <Font name="Cambria Math" size="56.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="25.0" right="15.0" />
+                        <Insets left="10.0" right="10.0" />
                      </HBox.margin>
                   </Label>
                   <Label fx:id="playerNameRight" styleClass="playerName" text="PLAYER 2" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
@@ -84,7 +84,7 @@
                <children>
                   <HBox id="sLabelLeft" alignment="CENTER" layoutX="180.0" layoutY="236.0" prefHeight="862.0" prefWidth="770.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                      <children>
-                        <Label fx:id="counterLeft" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="400.0" prefWidth="400.0" styleClass="scoreLabel" text="21" textAlignment="CENTER">
+                        <Label fx:id="counterLeft" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="400.0" prefWidth="460.0" styleClass="scoreLabel" text="20" textAlignment="CENTER">
                            <effect>
                               <BoxBlur height="0.0" iterations="3" width="0.0">
                                  <input>
@@ -108,6 +108,7 @@
                      </padding>
                      <children>
                         <Label fx:id="gameTypeLabel" alignment="CENTER" prefHeight="77.0" prefWidth="150.0" styleClass="sbGameLabel" text="11" textAlignment="CENTER" />
+                        <Label fx:id="ipAddrLabel" alignment="TOP_CENTER" graphicTextGap="2.0" prefWidth="110.0" style="-fx-font-size: 14px; -fx-text-fill: white; -fx-font-family: courier new;" text="192.168.241.188" visible="false" />
                         <Circle fx:id="serverStatus" fill="RED" radius="18.0" stroke="#fff900" strokeType="INSIDE" strokeWidth="2.0" styleClass="serverStatusOff" visible="false">
                            <VBox.margin>
                               <Insets />
@@ -120,7 +121,7 @@
                <children>
                   <VBox id="sLabelRight" alignment="CENTER" layoutX="226.0" layoutY="192.0" prefHeight="859.0" prefWidth="770.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                      <children>
-                        <Label fx:id="counterRight" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="400.0" prefWidth="400.0" styleClass="scoreLabel" text="8" textAlignment="CENTER">
+                        <Label fx:id="counterRight" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="400.0" prefWidth="460.0" styleClass="scoreLabel" text="20" textAlignment="CENTER">
                            <effect>
                               <BoxBlur height="0.0" iterations="0" width="0.0">
                                  <input>
@@ -142,12 +143,12 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: #3048a2;">
                <children>
                   <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="635.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="0.0" />
-                  <Pane fx:id="serviceFlagLeft" prefHeight="27.0" prefWidth="635.0" styleClass="serviceFlagActive" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="0.0" />
+                  <Pane fx:id="serviceFlagLeft" prefHeight="27.0" prefWidth="635.0" styleClass="serviceFlagActive" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="66.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: #3048a2;">
                <children>
-                  <Pane fx:id="serviceFlagRight" prefHeight="27.0" prefWidth="635.0" styleClass="serviceFlagInactive" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="67.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Pane fx:id="serviceFlagRight" prefHeight="27.0" prefWidth="635.0" styleClass="serviceFlagInactive" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="66.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
           </AnchorPane>
         </items>
