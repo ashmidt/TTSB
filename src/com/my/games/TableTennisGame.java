@@ -12,7 +12,7 @@ package com.my.games;
 public abstract class TableTennisGame {
     public enum PlayerSide {LEFT, RIGHT}
     public enum GameType {
-        G11(11), G21(12);
+        G11(11), G21(21);
         private final int value;
         
         private GameType(int value){
@@ -31,6 +31,10 @@ public abstract class TableTennisGame {
     
     public int getGameType(){
         return this.maxGameScore;
+    }
+    
+    public GameType getGameTypeEnum(){
+        return this.maxGameScore == GameType.G11.value ? GameType.G11 : GameType.G21;
     }
     
     public void setGameCompleted(boolean gameCompleted){

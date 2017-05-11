@@ -42,6 +42,35 @@ public class TTGame extends TableTennisGame {
 
         setGameType(TableTennisGame.GameType.G11);
         setGameCompleted(false);
+        players.get(PlayerSide.LEFT).setServiceOrder(true);
+        players.get(PlayerSide.RIGHT).setServiceOrder(false);
+    }
+    
+    private void UpdateServiceOrder(){
+        int scoreP1 = players.get(PlayerSide.LEFT).getScoreCounter();
+        int scoreP2 = players.get(PlayerSide.RIGHT).getScoreCounter();
+        int mod = 0;
+        
+        switch(getGameTypeEnum()){
+            case G11:
+                mod = 2;
+                break;
+            case G21:
+                mod = 5;
+                break;
+            default:
+                throw new AssertionError(GameType.valueOf(String.valueOf(getGameType())).name());
+        }
+
+        if (((scoreP1 + scoreP2) % mod) == 0) {
+            if(players.get(PlayerSide.LEFT).getServiceOrder()){
+                players.get(PlayerSide.LEFT).setServiceOrder(false);
+                players.get(PlayerSide.RIGHT).setServiceOrder(true);
+            }else{
+                players.get(PlayerSide.LEFT).setServiceOrder(true);
+                players.get(PlayerSide.RIGHT).setServiceOrder(false);
+            }
+        }
     }
     
     public void UpdatePlayersScore(PlayerSide side){
@@ -63,18 +92,32 @@ public class TTGame extends TableTennisGame {
                 }
             }
         }
+        
+        if(!getGameCompleted()){
+            UpdateServiceOrder();
+        }
     }
 
     public void DecriseScore(PlayerSide side){
-        if((players.get(side).getScoreCounter() + 1) > 0){
+        if(players.get(side).getScoreCounter() > 0){
             players.get(side).setScoreCounter(-1);
+            UpdateServiceOrder();
         }
     }
     
     public class TTPlayer extends TableTennisGame.Player {
-
+        private boolean isMyService = false;
+        
         public void updatePlayerName(String playerName) {
             setPlayerName(playerName);
+        }
+        
+        public void setServiceOrder(boolean isMyService){
+            this.isMyService = isMyService;
+        }
+        
+        public boolean getServiceOrder(){
+            return this.isMyService;
         }
     }
 }
