@@ -38,7 +38,7 @@ import socketfx.SocketListener;
  *
  * @author Alex
  */
-public class ttsbControllerModule implements Initializable {
+public class TTSBControllerModule implements Initializable {
     private final static Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
     final String ACTIVE_SERVICE = "serviceFlagActive";
     final String INACTIVE_SERVICE = "serviceFlagInactive";
@@ -183,7 +183,7 @@ public class ttsbControllerModule implements Initializable {
         try {
             getIPAddersses();
         } catch (SocketException ex) {
-            Logger.getLogger(ttsbController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TTSBController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
