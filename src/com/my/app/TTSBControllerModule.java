@@ -178,7 +178,7 @@ public class TTSBControllerModule implements Initializable {
         try {
             getIPAddersses();
         } catch (SocketException ex) {
-            Logger.getLogger(TTSBController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TTSBControllerModule.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
