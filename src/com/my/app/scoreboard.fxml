@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainContainer" prefHeight="1080.0" prefWidth="1650.0" styleClass="mainFxmlClass" stylesheets="@../view/scoreboard.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.my.app.TTSBController">
+<BorderPane fx:id="mainContainer" prefHeight="1080.0" prefWidth="1650.0" styleClass="mainFxmlClass" stylesheets="@../view/scoreboard.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.my.app.TTSBControllerModule">
    <top>
       <SplitPane dividerPositions="0.5" focusTraversable="false" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #3048a2;" BorderPane.alignment="CENTER">
         <items>

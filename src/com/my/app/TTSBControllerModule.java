@@ -82,14 +82,19 @@ public class TTSBControllerModule implements Initializable {
     private Label gameTypeLabel;
     @FXML
     private Label ipAddrLabel;
-
     private boolean isServer = false;
-
     EventHandler<KeyEvent> eventHandler;
-
     private boolean isConnected;
-
     private TTGame ttgame = new TTGame();
+    private FxSocketServer socket;
+    
+    public enum ConnectionDisplayState {
+        DISCONNECTED, WAITING, CONNECTED, AUTOCONNECTED, AUTOWAITING
+    }
+
+    public enum Cmd {
+        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21, PLLEFT, PLRIGHT
+    }
 
     private void UpdatePlayerScore(TTGame.PlayerSide side, int score) {
         switch (side) {
@@ -125,16 +130,6 @@ public class TTSBControllerModule implements Initializable {
     private void UpdateGameType(int gameType) {
         gameTypeLabel.setText(String.valueOf(gameType));
     }
-
-    public enum ConnectionDisplayState {
-        DISCONNECTED, WAITING, CONNECTED, AUTOCONNECTED, AUTOWAITING
-    }
-
-    public enum Cmd {
-        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21, PLLEFT, PLRIGHT
-    }
-
-    private FxSocketServer socket;
 
     private void connect() {
         socket = new FxSocketServer(new FxSocketListener(), 55555, Constants.instance().DEBUG_NONE);
@@ -238,6 +233,7 @@ public class TTSBControllerModule implements Initializable {
     private synchronized void notifyDisconnected() {
         isConnected = false;
         notifyAll();
+        connect();
     }
 
     private void displayState(ConnectionDisplayState state) {
@@ -268,10 +264,15 @@ public class TTSBControllerModule implements Initializable {
     protected void CheckServiceOrder() {
         if(ttgame.getGameCompleted()) return;
         
-        if (ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).getServiceOrder()) {
+        if (!ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).getServiceOrder()) {
             ChangeServiceColor(ACTIVE_SERVICE, INACTIVE_SERVICE);
+            ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).setServiceOrder(true);
+            ttgame.getPlayers().get(TTGame.PlayerSide.RIGHT).setServiceOrder(false);
+            
         } else {
             ChangeServiceColor(INACTIVE_SERVICE, ACTIVE_SERVICE);
+            ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).setServiceOrder(false);
+            ttgame.getPlayers().get(TTGame.PlayerSide.RIGHT).setServiceOrder(true);
         }
     }
 
