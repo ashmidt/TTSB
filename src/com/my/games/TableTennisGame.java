@@ -56,8 +56,8 @@ public abstract class TableTennisGame {
         public String getPlayerName(){return this.playerName;}
         
         protected void setScoreCounter(int score){
-            this.playerScore += score;
-        };
+            this.playerScore = score;
+        }
         
         public int getScoreCounter(){return this.playerScore;}
         

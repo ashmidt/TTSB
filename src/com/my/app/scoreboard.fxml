@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainContainer" prefHeight="1080.0" prefWidth="1650.0" styleClass="mainFxmlClass" stylesheets="@../view/scoreboard.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.my.app.ttsbControllerModule">
+<BorderPane fx:id="mainContainer" prefHeight="1080.0" prefWidth="1650.0" styleClass="mainFxmlClass" stylesheets="@../view/scoreboard.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.my.app.TTSBControllerModule">
    <top>
       <SplitPane dividerPositions="0.5" focusTraversable="false" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #3048a2;" BorderPane.alignment="CENTER">
         <items>
@@ -109,7 +109,7 @@
                      <children>
                         <Label fx:id="gameTypeLabel" alignment="CENTER" prefHeight="77.0" prefWidth="150.0" styleClass="sbGameLabel" text="11" textAlignment="CENTER" />
                         <Label fx:id="ipAddrLabel" alignment="TOP_CENTER" graphicTextGap="2.0" prefWidth="110.0" style="-fx-font-size: 14px; -fx-text-fill: white; -fx-font-family: courier new;" text="192.168.241.188" visible="false" />
-                        <Circle fx:id="serverStatus" fill="RED" radius="18.0" stroke="#fff900" strokeType="INSIDE" strokeWidth="2.0" styleClass="serverStatusOff" visible="false">
+                        <Circle fx:id="serverStatus" fill="RED" radius="18.0" stroke="#fff900" strokeType="INSIDE" strokeWidth="2.0" styleClass="serverStatusOff">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Circle>

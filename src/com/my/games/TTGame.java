@@ -26,16 +26,25 @@ public class TTGame extends TableTennisGame {
         return players;
     }
 
+    public void SwitchPlayersSide(){
+        TTPlayer p1 = players.get(PlayerSide.LEFT);
+        TTPlayer p2 = players.get(PlayerSide.RIGHT);
+        
+        players.replace(PlayerSide.LEFT, p1, p2);
+        players.replace(PlayerSide.RIGHT, p2, p1);
+    }
+    
     @Override
     public void nextSet() {
         players.forEach((k, v) -> {
             v.setScoreCounter(0);
         });
+        setGameCompleted(false);
     }
 
     private void InitializePlayers() {
         players.forEach((k, v) -> {
-            v.setPlayerName("Player " + k.ordinal());
+            v.setPlayerName("Player " + (k.ordinal() + 1));
             v.setGameScore(0);
             v.setScoreCounter(0);
         });
@@ -74,21 +83,42 @@ public class TTGame extends TableTennisGame {
     }
     
     public void UpdatePlayersScore(PlayerSide side){
-        int scoreP1 = players.get(PlayerSide.LEFT).getScoreCounter();
-        int scoreP2 = players.get(PlayerSide.RIGHT).getScoreCounter();
-        int counter = 0;
+        int scoreP1 = 0, scoreP2 = 0, counter;
+        scoreP1 = players.get(PlayerSide.LEFT).getScoreCounter();
+        scoreP2 = players.get(PlayerSide.RIGHT).getScoreCounter();
+        int gameTo = getGameType();
         
-        if(++counter < getGameType()){
+        if(getGameCompleted()) return;
+        
+        switch(side){
+            case LEFT:
+                counter = ++scoreP1;
+                break;
+            case RIGHT:
+                counter = ++scoreP2;
+                break;
+            default:
+                throw new AssertionError(side.name());
+            
+        }
+
+        if(counter < gameTo){
             players.get(side).setScoreCounter(counter);
         }else{
             if((scoreP1 - scoreP2) == 0){
+                System.out.println("Score tie.");
                 players.get(side).setScoreCounter(counter);
             }else if(Math.abs((scoreP1 - scoreP2)) > 1){
                 players.get(side).setScoreCounter(counter);
+                players.get(side).setGameScore(players.get(side).getGameScore() + 1);
                 setGameCompleted(true);
+                System.out.println("Game completed. Player " + players.get(side).getPlayerName() + " winner." + " (" + scoreP1 + ":" + scoreP2 + ")");
             }else{
                 if(!getGameCompleted()){
                     players.get(side).setScoreCounter(counter);
+                } else {
+                    players.get(side).setGameScore(players.get(side).getGameScore() + 1);
+                    System.out.println("Here is the end.");
                 }
             }
         }
@@ -100,7 +130,7 @@ public class TTGame extends TableTennisGame {
 
     public void DecriseScore(PlayerSide side){
         if(players.get(side).getScoreCounter() > 0){
-            players.get(side).setScoreCounter(-1);
+            players.get(side).setScoreCounter(players.get(side).getScoreCounter() - 1);
             UpdateServiceOrder();
         }
     }

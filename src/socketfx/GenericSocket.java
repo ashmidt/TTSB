@@ -178,7 +178,7 @@ public abstract class GenericSocket implements SocketListener {
             output.newLine();
             output.flush();
             if (debugFlagIsSet(Constants.instance().DEBUG_SEND)) {
-                String logMsg = "send> " + msg;
+                String logMsg = msg;
                 LOGGER.info(logMsg);
             }
         } catch (IOException e) {
