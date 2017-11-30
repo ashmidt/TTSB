@@ -93,7 +93,7 @@ public class TTSBControllerModule implements Initializable {
     }
 
     public enum Cmd {
-        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21, PLLEFT, PLRIGHT
+        LUP, LDOWN, RUP, RDOWN, RESET, SWITCH, SCHANGE, NEXT, GAME11, GAME21, PLLEFTNAME, PLRIGHTNAME
     }
 
     private void UpdatePlayerScore(TTGame.PlayerSide side, int score) {
@@ -198,8 +198,8 @@ public class TTSBControllerModule implements Initializable {
         @Override
         public void onMessage(String line) {
             if (line != null && !line.equals("")) {
-                LOGGER.info(line);
-                ProcessRemoteCmd(Cmd.valueOf(line.trim().contains(":") ? line.split(":")[0] : line), line.trim().contains(":") ? line.split(":")[1] : "");
+                LOGGER.info(line); 
+                ProcessRemoteCmd(line);
             }
         }
 
@@ -245,6 +245,7 @@ public class TTSBControllerModule implements Initializable {
             case CONNECTED:
                 serverStatus.getStyleClass().remove(0);
                 serverStatus.getStyleClass().add("serverStatusOn");
+                UpdateUI();
                 break;
             case AUTOCONNECTED:
                 break;
@@ -311,8 +312,10 @@ public class TTSBControllerModule implements Initializable {
 //        counterRight.setText(oldSideLeft);
     }
 
-    private void ProcessRemoteCmd(Cmd data, String attr) {
-        switch (data) {
+    private void ProcessRemoteCmd(String data) {
+        String[] cmdData = data.split(":");
+       
+        switch (Cmd.valueOf(cmdData[0])) {
             case LUP:
                 ttgame.UpdatePlayersScore(TableTennisGame.PlayerSide.LEFT);
                 CheckServiceOrder();
@@ -347,14 +350,18 @@ public class TTSBControllerModule implements Initializable {
             case GAME21:
                 ttgame.setGameType(TableTennisGame.GameType.G21);
                 break;
-            case PLLEFT:
-                ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).updatePlayerName(attr);
+            case PLLEFTNAME:
+                if(cmdData.length == 2 && !cmdData[1].isEmpty()){
+                    ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).updatePlayerName(cmdData[1]);
+                }
                 break;
-            case PLRIGHT:
-                ttgame.getPlayers().get(TTGame.PlayerSide.RIGHT).updatePlayerName(attr);
+            case PLRIGHTNAME:
+                if(cmdData.length == 2 && !cmdData[1].isEmpty()){
+                    ttgame.getPlayers().get(TTGame.PlayerSide.RIGHT).updatePlayerName(cmdData[1]);
+                }
                 break;
             default:
-                throw new AssertionError(data.name());
+                throw new AssertionError(Cmd.valueOf(cmdData[1]).name());
         }
 
         UpdateUI();
@@ -419,7 +426,13 @@ public class TTSBControllerModule implements Initializable {
         UpdateGameType(ttgame.getGameType());
         
         if (socket != null) {
-            socket.sendMessage("LP:" + counterLeft.getText() + ";RP:" + counterRight.getText());
+            socket.sendMessage(
+                    "PLCOUNTLEFT:" + counterLeft.getText() + 
+                    ";PLCOUNTRIGHT:" + counterRight.getText() + 
+                    ";PLLEFTNAME:" + ttgame.getPlayers().get(TTGame.PlayerSide.LEFT).getPlayerName() + 
+                    ";PLRIGHTNAME:" + ttgame.getPlayers().get(TTGame.PlayerSide.RIGHT).getPlayerName() +
+                    ";GAMETYPE:" + ttgame.getGameType()
+            );
         }
     }
 
